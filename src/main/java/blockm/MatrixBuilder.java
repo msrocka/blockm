@@ -48,9 +48,10 @@ public class MatrixBuilder {
 		sparse.set(row, col, val);
 		sparseEntries++;
 		if (sparseEntries % checkpoint == 0) {
-			int n = sparse.rows * sparse.cols
-					- denseRows * denseCols;
-			double fr = (double) sparseEntries / (double) n;
+			// double casts to avoid integer overflows
+			double n = (double) sparse.rows * (double) sparse.cols
+					- (double) denseRows * (double) denseCols;
+			double fr = (double) sparseEntries / n;
 			if (fr > maxSparseFileRate) {
 				mapDense();
 			}
@@ -64,8 +65,9 @@ public class MatrixBuilder {
 					+ "dense {}*{} matrix", denseRows, denseCols);
 			return dense;
 		}
-		int n = sparse.rows * sparse.cols;
-		double fr = (double) sparseEntries / (double) n;
+		// double casts to avoid integer overflows
+		double n = (double) sparse.rows * (double) sparse.cols;
+		double fr = (double) sparseEntries / n;
 		log.trace("Fill rate = {}", fr);
 		if (fr > maxSparseFileRate) {
 			mapDense();
@@ -74,7 +76,7 @@ public class MatrixBuilder {
 			return dense;
 		}
 		log.trace("Finish matrix builder with "
-					+ "sparse {}*{} matrix", sparse.rows, sparse.cols);
+				+ "sparse {}*{} matrix", sparse.rows, sparse.cols);
 		return sparse;
 	}
 
@@ -96,12 +98,11 @@ public class MatrixBuilder {
 		}
 		denseRows = dense.rows;
 		denseCols = dense.columns;
-		log.trace("Allocated a {}*{} dense matrix",
-				denseRows, denseCols);
+		log.trace("Allocated a {}*{} dense matrix; {} new entries",
+				denseRows, denseCols, sparseEntries);
 		sparse.iterate(
 				(row, col, val) -> dense.set(row, col, val));
 		sparse.clear();
 		sparseEntries = 0;
 	}
-
 }

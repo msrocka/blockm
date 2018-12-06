@@ -8,7 +8,7 @@ public class MatrixBuilderTest {
 
 	@Test
 	public void testSparseDiagonal() {
-		int size = 100_000;
+		int size = 1_000_000;
 		MatrixBuilder b = new MatrixBuilder();
 		for (int i = 0; i < size; i++) {
 			b.put(i, i, i);
