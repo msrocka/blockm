@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/msrocka/blockm.svg?branch=master)](https://travis-ci.org/msrocka/blockm)
+
 # blockm
 When you use a library for matrix based computations you often have to know the
 size of the matrix and if it is a dense or sparse matrix *before* you actually
