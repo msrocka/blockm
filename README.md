@@ -61,6 +61,14 @@ With this you can avoid some allocation steps when the resulting matrix is
 dense.
 
 
+## Limitations
+`blockm` has currently the following limitations:
+
+* `put 0` calls are ignored: this is only an issue when you want to reset a
+  value to `0` that has been previously set to a non-zero value.
+* it is not thread-safe: concurrent `put`-calls will result in a mess.
+
+
 ## Examples from the test log
 Building a `2500*1500` matrix by setting each value and with the `checkpoint`
 parameter set to `5e5`:
