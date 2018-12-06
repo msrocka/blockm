@@ -99,9 +99,6 @@ Finish matrix builder with dense 2500*1500 matrix
 Fill up only the diagonal values of a `1e6*1e6` matrix:
 
 ```
-Allocated a 2000*1500 dense matrix; 500000 new entries
-Allocated a 2334*1500 dense matrix; 500000 new entries
-Allocated a 2500*1500 dense matrix; 248834 new entries
 Fill rate = 9.99999E-7
 Finish matrix builder with sparse 1000000*1000000 matrix
 ```
