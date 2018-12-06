@@ -6,18 +6,14 @@ package blockm;
  */
 public class DenseMatrix implements IMatrix {
 
-	private final double[] data;
-	private final int rows;
-	private final int columns;
+	final double[] data;
+	final int rows;
+	final int columns;
 
 	public DenseMatrix(int rows, int columns) {
 		this.rows = rows;
 		this.columns = columns;
 		data = new double[rows * columns];
-	}
-
-	public double[] getData() {
-		return data;
 	}
 
 	@Override

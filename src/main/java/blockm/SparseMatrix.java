@@ -13,16 +13,16 @@ import gnu.trove.map.hash.TIntObjectHashMap;
  */
 public class SparseMatrix implements IMatrix {
 
-	private final int rows;
-	private final int cols;
+	int rows = 0;
+	int cols = 0;
 
 	private final TIntObjectHashMap<TIntDoubleHashMap> data;
 
-	public SparseMatrix(int rows, int cols) {
-		this.rows = rows;
-		this.cols = cols;
-		data = new TIntObjectHashMap<>(Constants.DEFAULT_CAPACITY,
-				Constants.DEFAULT_LOAD_FACTOR, -1);
+	public SparseMatrix() {
+		data = new TIntObjectHashMap<>(
+			Constants.DEFAULT_CAPACITY,
+			Constants.DEFAULT_LOAD_FACTOR,
+			-1);
 	}
 
 	@Override
@@ -40,10 +40,19 @@ public class SparseMatrix implements IMatrix {
 		// do nothing if val = 0 *and* when there is no value to overwrite
 		if (val == 0 && !hasEntry(row, col))
 			return;
+		if (row >= rows) {
+			rows = row + 1;
+		}
+		if (col >= cols) {
+			cols = col + 1;
+		}
 		TIntDoubleHashMap rowMap = data.get(row);
 		if (rowMap == null) {
-			rowMap = new TIntDoubleHashMap(Constants.DEFAULT_CAPACITY,
-					Constants.DEFAULT_LOAD_FACTOR, -1, 0);
+			rowMap = new TIntDoubleHashMap(
+				Constants.DEFAULT_CAPACITY,
+				Constants.DEFAULT_LOAD_FACTOR,
+				-1,
+				0);
 			data.put(row, rowMap);
 		}
 		rowMap.put(col, val);
@@ -54,6 +63,12 @@ public class SparseMatrix implements IMatrix {
 		if (rowMap == null)
 			return false;
 		return rowMap.get(col) != 0;
+	}
+
+	public void clear() {
+		data.clear();
+		rows = 0;
+		cols = 0;
 	}
 
 	@Override
@@ -84,7 +99,7 @@ public class SparseMatrix implements IMatrix {
 
 	@Override
 	public SparseMatrix copy() {
-		SparseMatrix copy = new SparseMatrix(rows, cols);
+		SparseMatrix copy = new SparseMatrix();
 		TIntObjectIterator<TIntDoubleHashMap> rows = data.iterator();
 		while (rows.hasNext()) {
 			rows.advance();
