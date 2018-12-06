@@ -1,6 +1,11 @@
 package blockm;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MatrixBuilder {
+
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final double maxSparseFileRate;
 	private final int checkpoint;
@@ -55,14 +60,21 @@ public class MatrixBuilder {
 	public IMatrix finish() {
 		if (dense != null) {
 			mapDense();
+			log.trace("Finish matrix builder with "
+					+ "dense {}*{} matrix", denseRows, denseCols);
 			return dense;
 		}
 		int n = sparse.rows * sparse.cols;
 		double fr = (double) sparseEntries / (double) n;
+		log.trace("Fill rate = {}", fr);
 		if (fr > maxSparseFileRate) {
 			mapDense();
+			log.trace("Finish matrix builder with "
+					+ "dense {}*{} matrix", denseRows, denseCols);
 			return dense;
 		}
+		log.trace("Finish matrix builder with "
+					+ "sparse {}*{} matrix", sparse.rows, sparse.cols);
 		return sparse;
 	}
 
@@ -84,6 +96,8 @@ public class MatrixBuilder {
 		}
 		denseRows = dense.rows;
 		denseCols = dense.columns;
+		log.trace("Allocated a {}*{} dense matrix",
+				denseRows, denseCols);
 		sparse.iterate(
 				(row, col, val) -> dense.set(row, col, val));
 		sparse.clear();
