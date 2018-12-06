@@ -46,22 +46,3 @@ is what you can specify with the checkpoint parameter:
 MatrixBuilder mb = new MatrixBuilder(0.2, 5000);
 // ...
 ```
-
-## Implementation details
-
-```fsharp
-
-module MatrixBuilder =
-  type T = {
-    maxSparseFillRate: double;
-    checkpoint: int;
-    entries: int;
-    denseRowCount: int;
-    denseColCount: int;
-    totalRowCount: int;
-    totalColCount: int
-    // ...
-  } with
-
-    member this.put row col value
-```

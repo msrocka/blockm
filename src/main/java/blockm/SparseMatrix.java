@@ -20,9 +20,9 @@ public class SparseMatrix implements IMatrix {
 
 	public SparseMatrix() {
 		data = new TIntObjectHashMap<>(
-			Constants.DEFAULT_CAPACITY,
-			Constants.DEFAULT_LOAD_FACTOR,
-			-1);
+				Constants.DEFAULT_CAPACITY,
+				Constants.DEFAULT_LOAD_FACTOR,
+				-1);
 	}
 
 	@Override
@@ -49,10 +49,10 @@ public class SparseMatrix implements IMatrix {
 		TIntDoubleHashMap rowMap = data.get(row);
 		if (rowMap == null) {
 			rowMap = new TIntDoubleHashMap(
-				Constants.DEFAULT_CAPACITY,
-				Constants.DEFAULT_LOAD_FACTOR,
-				-1,
-				0);
+					Constants.DEFAULT_CAPACITY,
+					Constants.DEFAULT_LOAD_FACTOR,
+					-1,
+					0);
 			data.put(row, rowMap);
 		}
 		rowMap.put(col, val);
@@ -100,16 +100,7 @@ public class SparseMatrix implements IMatrix {
 	@Override
 	public SparseMatrix copy() {
 		SparseMatrix copy = new SparseMatrix();
-		TIntObjectIterator<TIntDoubleHashMap> rows = data.iterator();
-		while (rows.hasNext()) {
-			rows.advance();
-			int row = rows.key();
-			TIntDoubleIterator cols = rows.value().iterator();
-			while (cols.hasNext()) {
-				cols.advance();
-				copy.set(row, cols.key(), cols.value());
-			}
-		}
+		iterate((row, col, val) -> copy.set(row, col, val));
 		return copy;
 	}
 
@@ -136,4 +127,27 @@ public class SparseMatrix implements IMatrix {
 		return builder.toString();
 	}
 
+	/**
+	 * Iterates over the non-zero values in this matrix.
+	 */
+	public void iterate(EntryFunction fn) {
+		TIntObjectIterator<TIntDoubleHashMap> rows = data.iterator();
+		while (rows.hasNext()) {
+			rows.advance();
+			int row = rows.key();
+			TIntDoubleIterator cols = rows.value().iterator();
+			while (cols.hasNext()) {
+				cols.advance();
+				fn.value(row, cols.key(), cols.value());
+			}
+		}
+	}
+
+
+	@FunctionalInterface
+	public interface EntryFunction {
+
+		void value(int row, int col, double value);
+
+	}
 }
